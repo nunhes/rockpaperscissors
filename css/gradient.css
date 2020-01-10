@@ -1,0 +1,8 @@
+/* en css tamén podemos empregar variables */
+
+:root
+ {
+  --main-bg-color: coral;
+  --main-txt-color: blue;
+  --main-padding: 15px;
+}

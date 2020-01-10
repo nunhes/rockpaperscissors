@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>A console game</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        
+        
+        <div id="heading">
+            <h1>Rock, Paper, Scissors!</h1>
+            <div id="wrapper">
+                <button class="button" type="button" id="rock">Rock</button>
+                <button class="button" type="button" id="paper">Paper</button>
+                <button class="button" type="button" id="scissors">Scissors</button>
+            </div>
+        </div>
+        <div id="table-container">
+            <table>
+                <thead>
+                <th>Round</th>
+                <th>Player chooses...</th>
+                <th>Computer chooses...</th>
+                <th>Outcome</th>
+                <th>Player Score</th>
+                <th>Computer Score</th>
+                </thead>
+                <tbody>
+                </tbody>
+          </table>
+        </div>
+    <script>
+    
+        const heading = document.querySelector("#heading");
+        const wrapper = document.querySelector("#wrapper");
+        const title = document.querySelector("h1");
+    
+        const buttons = document.querySelectorAll("button");
+        buttons.forEach((button) => {
+        button.addEventListener("click", playRound);
+        }); 
+    
+        const table = document.querySelector("table");
+    
+        let playerScore = 0;
+        let computerScore = 0;
+        let rounds = 0;
+    
+        function playRound(e) {
+    
+            table.style.cssText = "display: table;";
+            let newRow = table.insertRow(-1);
+            
+            ++rounds;
+            const roundNumber = newRow.insertCell(0).textContent = `${rounds}`;
+        
+            const playerSelection = playerPlay();
+            const computerSelection = computerPlay();
+            
+            function playerPlay() {
+                let playerSelection = `${e.target.id}`;
+                let playerMove = newRow.insertCell(1).textContent = `${playerSelection}`;
+                return playerSelection;
+            }
+    
+            function computerPlay() {
+                const choices = ["rock", "paper", "scissors"];
+                let computerSelection = choices[Math.floor(Math.random() * (3))];
+                let computerMove = newRow.insertCell(2).textContent = `${computerSelection}`;
+                return computerSelection;
+            }
+    
+            function compareSelections() {
+                if (playerSelection === computerSelection) {
+                    return 0;       
+                } else if ( (playerSelection === "rock" && computerSelection === "scissors") || 
+                    (playerSelection === "paper" && computerSelection === "rock") || 
+                    (playerSelection === "scissors" && computerSelection === "paper") ) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
+    
+            const comparison = compareSelections();
+    
+            function scoreRound() {
+                let outcome;
+                if (comparison=== 0) {
+                outcome = "Tie!"
+                } else if (comparison === 1) {
+                    playerScore += 1;
+                    outcome = "You win the round!";
+                } else {
+                    computerScore += 1;
+                    outcome = "The computer wins the round!"
+                }
+                let outcomeMessage = newRow.insertCell(3).textContent = `${outcome}`;
+                let playerScoreMessage = newRow.insertCell(4).textContent = `${playerScore}`;
+                let computerScoreMessage = newRow.insertCell(5).textContent = `${computerScore}`;
+    
+                let results = [playerScore, computerScore]; 
+                return results;
+            }
+    
+            const results = scoreRound();
+            
+            checkEndgame();
+    
+            function announceWinner() {
+                let winner;
+                if (playerScore > computerScore) {
+                winner = "You win the game!";
+                } else if (playerScore < computerScore) {
+                winner = "The computer wins the game!";
+                }
+                let winnerAnnouncement = document.createElement("h3");
+                winnerAnnouncement.textContent = `${winner}`;
+                heading.insertBefore(winnerAnnouncement, wrapper);  
+            }
+    
+            function checkEndgame() {
+                if ( (playerScore === 5) || (computerScore === 5) ) {
+                    buttons.forEach( (button) => {
+                        button.remove();
+                    });
+                    announceWinner();
+                }
+            }
+        }
+     
+      </script>
+    </body>
+</html>
